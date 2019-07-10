@@ -1,0 +1,42 @@
+import ipywidgets as widgets
+import sys
+import random
+from IPython.display import display
+from IPython.display import clear_output
+
+
+def generate_mc(answers,question,answer,custom_feedback=[],shuffle=True):
+    out = widgets.Output()
+    answer_string = answers[answer-1] #svaret på spørsmålet
+    if shuffle:
+        if(len(custom_feedback)==len(answers)): #dersom vi har feedback må denne sorteres shuffles sammen med svarene
+            mapIndexPosition = list(zip(answers, custom_feedback))
+            random.shuffle(mapIndexPosition)
+            answers, custom_feedback = zip(*mapIndexPosition)
+        else: #ellers shufler vi bare svarene
+            random.shuffle(answers)
+    alternativ = widgets.RadioButtons(
+    options=answers,
+    description='',
+    layout=widgets.Layout(width='1500px'),
+    disabled=False)
+    
+    print('\033[1m',question,'\033[0m')
+    button = widgets.Button(description="Sjekk svaret")
+    display(alternativ)
+    display(button)
+    def check_answer(b):
+        a = alternativ.value
+        if(a==answer_string):
+            color = '\x1b[6;30;42m' + "Riktig." + '\x1b[0m' +"\n" #fargen blir da grønn
+        else:
+            color = '\x1b[5;30;41m' + "Feil. " + '\x1b[0m' +"\n" #ellers blir fargen rød
+        with out:
+            clear_output()
+        with out:
+            print(color)
+            if(len(custom_feedback)==len(answers)):
+                print(custom_feedback[a-1])
+      
+    display(out)
+    button.on_click(check_answer)
