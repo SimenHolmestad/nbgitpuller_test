@@ -40,3 +40,40 @@ def generate_mc(answers,question,answer,custom_feedback=[],shuffle=True):
       
     display(out)
     button.on_click(check_answer)
+    
+def generate_multiple1(filename): #Tar inn tekst på formatet spørsmål, antall alternativer, [alternativer], rett svar (tall)
+    f = open(filename,"r",encoding="UTF-8")
+    lines = f.readlines()
+    f.close()
+    for line in lines:
+        line = line.split(",")
+        question = line[0]
+        answers = []
+        for answer in line[2:2+int(line[1])]:
+            answers.append(answer)
+        generate_mc(answers,question,int(line[len(line)-1]))
+        
+def generate_multiple2(filename): #Tar inn tekst på formatet spørsmål, rett svar (streng), [andre alternativer]
+    f = open(filename,"r",encoding="UTF-8")
+    lines = f.readlines()
+    f.close()
+    for line in lines:
+        line = line.split(",")
+        question = line[0]
+        answer = line[1]
+        answers = line[2:]+[answer]
+        generate_mc(answers,question,len(answers))
+        
+def generate_multiple3(filename): #her er førstelinje alle svarene på form f.eks abbcdd...
+                                  #neste linjer: spørsmål£alternativ1£alternativ2osv
+    f = open(filename,"r",encoding="UTF-8")
+    lines = f.readlines()
+    f.close()
+    correct_answers=[]
+    for letter in lines[0]:
+        correct_answers.append(ord(letter) - 96)
+    for i in range(1,len(lines)):
+        line = lines[i].split("£")
+        question = line[0]
+        answers = line[1:]
+        generate_mc(answers,question,correct_answers[i-1])
