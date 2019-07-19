@@ -33,10 +33,12 @@ def generate_mc(answers,question,answer,custom_feedback=[],shuffle=True):
                 color += custom_feedback[answer]
         else:
             color = '\x1b[5;30;41m' + "Feil. " + '\x1b[0m' +"\n" #ellers blir fargen rød
+            if(len(custom_feedback)==len(answers)):
+                color += custom_feedback[answer]
         with out:
             clear_output()
-        with out:
             print(color)
+            
             
       
     display(out)
